@@ -1,48 +1,61 @@
 // app/page.tsx
-"use client";
-import React, { useEffect, useState } from "react";
-import { auth } from "./lib/firebase"; // Assure-toi que le chemin est correct
-import { onAuthStateChanged } from "firebase/auth";
+"use client"; // Utiliser cette directive pour indiquer un composant client
+
+import { useEffect, useState } from "react";
+import { fetchPopularMovies } from "./lib/tmdb"; // Import de la fonction pour récupérer les films populaires
 import { useRouter } from "next/navigation";
 
-import ProtectedRoute from "./components/auth";
-import LogoutButton from "./components/LogoutButton";
-
-const HomePage = () => {
-  const [user, setUser] = useState<any>(null);
+const Home = () => {
+  const [movies, setMovies] = useState([]);
   const router = useRouter();
 
+  // Fonction pour charger les films populaires
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setUser(user);
-      if (!user) {
-        router.push("/login"); // Redirection vers la page de login si non connecté
-      }
-    });
-    return () => unsubscribe();
-  }, [router]);
+    const getMovies = async () => {
+      const data = await fetchPopularMovies();
+      setMovies(data);
+    };
+    getMovies();
+  }, []);
 
-  if (!user) {
-    return <div>Chargement...</div>;
-  }
+  // Fonction pour rediriger vers le profil de l'utilisateur
+  const goToProfile = () => {
+    router.push("/profile");
+  };
 
   return (
-    <ProtectedRoute>
-      <div className="min-h-screen flex items-center justify-center bg-gray-100">
-        <div className="bg-white p-6 rounded-lg shadow-md w-full max-w-md">
-          <h1 className="text-3xl font-bold text-center mb-6 text-black">
-            Profil Utilisateur
-          </h1>
-          <p className="text-center text-black">Bienvenue sur votre profil.</p>
-          <h1 className="text-center text-black">{user.email}</h1>
+    <div className="min-h-screen bg-gray-900 text-white">
+      <div className="container mx-auto px-4 py-8">
+        <h1 className="text-4xl font-bold mb-6">Films Populaires</h1>
 
-          <div className="text-center mt-6">
-            <LogoutButton />
-          </div>
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
+          {movies.map((movie: any) => (
+            <div
+              key={movie.id}
+              className="bg-gray-800 p-4 rounded-lg shadow-md"
+            >
+              <img
+                src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+                alt={movie.title}
+                className="w-full h-72 object-cover rounded-lg mb-4"
+              />
+              <h3 className="text-xl font-semibold">{movie.title}</h3>
+              <p className="text-sm text-gray-400">{movie.release_date}</p>
+            </div>
+          ))}
+        </div>
+
+        <div className="mt-8 text-center">
+          <button
+            onClick={goToProfile}
+            className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg"
+          >
+            Voir Mon Profil
+          </button>
         </div>
       </div>
-    </ProtectedRoute>
+    </div>
   );
 };
 
-export default HomePage;
+export default Home;

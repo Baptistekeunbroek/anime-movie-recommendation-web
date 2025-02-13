@@ -1,36 +1,49 @@
 // components/MoviesList.tsx
-
-import React from "react";
-import Link from "next/link"; // Pour naviguer vers les détails du film
+import React, { useEffect, useState } from "react";
+import { fetchPopularMovies } from "../lib/tmdb";
 
 interface Movie {
   id: number;
   title: string;
   poster_path: string;
+  overview: string;
 }
 
-interface MoviesListProps {
-  movies: Movie[];
-}
+const MoviesList = () => {
+  const [movies, setMovies] = useState<Movie[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
 
-const MoviesList: React.FC<MoviesListProps> = ({ movies }) => {
+  useEffect(() => {
+    const getMovies = async () => {
+      const movies = await fetchPopularMovies();
+      setMovies(movies);
+      setLoading(false);
+    };
+    getMovies();
+  }, []);
+
+  if (loading) {
+    return <div>Chargement...</div>;
+  }
+
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
       {movies.map((movie) => (
         <div
           key={movie.id}
-          className="bg-white rounded-lg shadow-lg overflow-hidden"
+          className="border rounded-lg overflow-hidden shadow-lg text-black"
         >
-          <Link href={`/movie/${movie.id}`}>
-            <img
-              src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-              alt={movie.title}
-              className="w-full h-72 object-cover"
-            />
-            <div className="p-4">
-              <h2 className="text-xl font-semibold">{movie.title}</h2>
-            </div>
-          </Link>
+          <img
+            src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+            alt={movie.title}
+            className="w-full h-96 object-cover text-black"
+          />
+          <div className="p-4">
+            <h2 className="text-xl font-bold">{movie.title}</h2>
+            <p className="text-black text-sm">
+              {movie.overview.slice(0, 100)}...
+            </p>
+          </div>
         </div>
       ))}
     </div>
