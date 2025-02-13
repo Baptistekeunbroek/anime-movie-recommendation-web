@@ -1,6 +1,7 @@
 // components/MoviesList.tsx
 import React, { useEffect, useState } from "react";
 import { fetchPopularMovies } from "../lib/tmdb";
+import { addFavorite } from "../lib/firestore"; // Import de la fonction pour ajouter un favori
 
 interface Movie {
   id: number;
@@ -21,6 +22,14 @@ const MoviesList = () => {
     };
     getMovies();
   }, []);
+
+  const handleAddFavorite = (movie: {
+    id: number;
+    title: string;
+    poster_path: string;
+  }) => {
+    addFavorite(movie); // Passe l'objet complet du film
+  };
 
   if (loading) {
     return <div>Chargement...</div>;
@@ -43,6 +52,12 @@ const MoviesList = () => {
             <p className="text-black text-sm">
               {movie.overview.slice(0, 100)}...
             </p>
+            <button
+              onClick={() => handleAddFavorite(movie)}
+              className="mt-4 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg"
+            >
+              Ajouter aux favoris
+            </button>
           </div>
         </div>
       ))}
