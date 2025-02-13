@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../lib/firebase"; // Assurez-vous que 'auth' est correctement importé
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
