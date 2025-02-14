@@ -19,6 +19,17 @@ export const fetchMovies = async (query: string) => {
   }
 };
 
+export const fetchMovieDetails = async (movieId: number) => {
+  console.log(`Fetching details for movie ID: ${movieId}`); // Ajout d'un log ici pour vérifier l'appel
+  const response = await fetch(
+    `https://api.themoviedb.org/3/movie/${movieId}?api_key=${API_KEY}`
+  );
+  if (!response.ok) {
+    throw new Error("Erreur lors de la récupération des détails du film");
+  }
+  return await response.json();
+};
+
 export const fetchPopularMovies = async () => {
   try {
     const response = await api.get("movie/popular", {

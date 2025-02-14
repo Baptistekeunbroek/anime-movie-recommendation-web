@@ -4,6 +4,7 @@ import { fetchRecommendedMovies, fetchMovies } from "../lib/tmdb";
 import { Movie } from "../type/types";
 import { useAuth } from "../lib/authContext";
 import { addFavorite } from "../lib/firestore";
+import Link from "next/link"; // Import de Link pour la navigation entre les pages
 
 const MoviesList = () => {
   const [recommendedMovies, setRecommendedMovies] = useState<Movie[]>([]);
@@ -135,12 +136,21 @@ const MoviesList = () => {
                     {movie.overview.slice(0, 100)}...
                   </p>
                 </div>
-                <button
-                  onClick={() => handleAddFavorite(movie)}
-                  className="mt-4 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg"
-                >
-                  Ajouter aux favoris
-                </button>
+
+                <div className="mt-4">
+                  <Link href={`/movies/${movie.id}`} passHref>
+                    <button className="ml-4 px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg">
+                      Voir détails
+                    </button>
+                  </Link>
+
+                  <button
+                    onClick={() => handleAddFavorite(movie)}
+                    className="ml-4 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg"
+                  >
+                    Ajouter aux favoris
+                  </button>
+                </div>
               </div>
             ))}
           </div>
@@ -166,12 +176,20 @@ const MoviesList = () => {
                 {movie.overview.slice(0, 100)}...
               </p>
             </div>
-            <button
-              onClick={() => handleAddFavorite(movie)}
-              className="mt-4 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg"
-            >
-              Ajouter aux favoris
-            </button>
+            <div className="mt-4">
+              <Link href={`/movies/${movie.id}`} passHref>
+                <button className="ml-4 px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg">
+                  Voir détails
+                </button>
+              </Link>
+
+              <button
+                onClick={() => handleAddFavorite(movie)}
+                className="ml-4 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg"
+              >
+                Ajouter aux favoris
+              </button>
+            </div>
           </div>
         ))}
       </div>
