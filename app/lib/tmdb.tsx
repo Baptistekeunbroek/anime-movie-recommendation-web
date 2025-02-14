@@ -7,6 +7,18 @@ const api = axios.create({
   baseURL: "https://api.themoviedb.org/3/",
 });
 
+export const fetchMovies = async (query: string) => {
+  try {
+    const response = await axios.get(
+      `https://api.themoviedb.org/3/search/movie?api_key=${API_KEY}&query=${query}&language=en-US&page=1`
+    );
+    return response.data.results;
+  } catch (error) {
+    console.error("Erreur lors de la recherche de films:", error);
+    return [];
+  }
+};
+
 export const fetchPopularMovies = async () => {
   try {
     const response = await api.get("movie/popular", {
