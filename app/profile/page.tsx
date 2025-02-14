@@ -89,15 +89,17 @@ const Profile = () => {
                   return (
                     <div
                       key={movie.id}
-                      className="border rounded-lg overflow-hidden shadow-lg text-black"
+                      className="border rounded-lg overflow-hidden shadow-lg text-white"
                     >
                       <img
                         src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
                         alt={movie.title}
-                        className="w-full h-96 object-cover text-black"
+                        className="w-full h-96 object-cover text-white"
                       />
                       <div className="p-4">
-                        <h2 className="text-xl font-bold">{movie.title}</h2>
+                        <h2 className="text-xl font-bold text-white">
+                          {movie.title}
+                        </h2>
                       </div>
                       <button
                         onClick={() => handleRemoveFavorite(movie)}

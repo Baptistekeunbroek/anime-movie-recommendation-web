@@ -1,8 +1,7 @@
-// app/page.tsx
-"use client"; // Utiliser cette directive pour indiquer un composant client
+"use client";
 
 import { useEffect, useState } from "react";
-import { fetchPopularMovies } from "./lib/tmdb"; // Import de la fonction pour récupérer les films populaires
+import { fetchPopularMovies } from "./lib/tmdb";
 import { useRouter } from "next/navigation";
 import MoviesList from "./components/MoviesList";
 
@@ -19,7 +18,6 @@ const Home = () => {
     getMovies();
   }, []);
 
-  // Fonction pour rediriger vers le profil de l'utilisateur
   const goToProfile = () => {
     router.push("/profile");
   };
