@@ -123,34 +123,25 @@ const MoviesList = () => {
             {searchResults.map((movie) => (
               <div
                 key={movie.id}
-                className="border rounded-lg overflow-hidden shadow-lg text-white"
+                className="rounded-lg overflow-hidden shadow-lg text-white relative group"
               >
                 <img
                   src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
                   alt={movie.title}
                   className="w-full h-96 object-cover text-white"
                 />
-                <div className="p-4">
-                  <h2 className="text-xl font-bold">{movie.title}</h2>
-                  <p className="text-white text-sm">
-                    {movie.overview.slice(0, 100)}...
-                  </p>
-                </div>
-
-                <div className="mt-4">
-                  <Link href={`/movies/${movie.id}`} passHref>
-                    <button className="ml-4 px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg">
-                      Voir détails
-                    </button>
-                  </Link>
-
-                  <button
-                    onClick={() => handleAddFavorite(movie)}
-                    className="ml-4 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg"
-                  >
-                    Ajouter aux favoris
+                <Link href={`/movies/${movie.id}`} passHref>
+                  <button className="absolute top-1/4 left-1/2 transform -translate-x-1/2 -translate-y-1/2 mt-4 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    Voir détails
                   </button>
-                </div>
+                </Link>
+
+                <button
+                  onClick={() => handleAddFavorite(movie)}
+                  className="absolute top-3/4 left-1/2 transform -translate-x-1/2 -translate-y-1/2 mt-4 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                >
+                  Ajouter aux favoris
+                </button>
               </div>
             ))}
           </div>
@@ -163,33 +154,25 @@ const MoviesList = () => {
         {recommendedMovies.map((movie) => (
           <div
             key={movie.id}
-            className="border rounded-lg overflow-hidden shadow-lg text-white"
+            className="rounded-lg overflow-hidden shadow-lg text-white relative group"
           >
             <img
               src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
               alt={movie.title}
               className="w-full h-96 object-cover text-white"
             />
-            <div className="p-4">
-              <h2 className="text-xl font-bold">{movie.title}</h2>
-              <p className="text-white text-sm">
-                {movie.overview.slice(0, 100)}...
-              </p>
-            </div>
-            <div className="mt-4">
-              <Link href={`/movies/${movie.id}`} passHref>
-                <button className="ml-4 px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg">
-                  Voir détails
-                </button>
-              </Link>
-
-              <button
-                onClick={() => handleAddFavorite(movie)}
-                className="ml-4 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg"
-              >
-                Ajouter aux favoris
+            <Link href={`/movies/${movie.id}`} passHref>
+              <button className="absolute top-1/4 left-1/2 transform -translate-x-1/2 -translate-y-1/2 mt-4 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                Voir détails
               </button>
-            </div>
+            </Link>
+
+            <button
+              onClick={() => handleAddFavorite(movie)}
+              className="absolute top-3/4 left-1/2 transform -translate-x-1/2 -translate-y-1/2 mt-4 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+            >
+              Ajouter aux favoris
+            </button>
           </div>
         ))}
       </div>
