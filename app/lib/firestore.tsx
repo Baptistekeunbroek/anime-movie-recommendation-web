@@ -166,4 +166,96 @@ const removeFavorite = async (uid, movie) => {
   }
 };
 
-export { getFavorites, addFavorite, removeFavorite };
+const getLikedMovies = async (uid: string) => {
+  const user = getAuth().currentUser;
+  if (user) {
+    const userRef = doc(db, "users", user.uid);
+    const userDoc = await getDoc(userRef);
+    if (userDoc.exists()) {
+      const likedMovieIds = userDoc.data().likes || [];
+      console.log(likedMovieIds, "Likes récupérés depuis Firestore");
+
+      if (likedMovieIds.length === 0) return [];
+
+      // On récupère les détails du film pour chaque ID liké
+      const fetchedLikedMovies = await Promise.all(
+        likedMovieIds.map(async (movieId: number) => {
+          try {
+            const response = await fetch(
+              `https://api.themoviedb.org/3/movie/${movieId}?api_key=${process.env.NEXT_PUBLIC_TMDB_API_KEY}`
+            );
+            const movieDetails = await response.json();
+
+            if (movieDetails.id && movieDetails.title) {
+              return {
+                id: movieDetails.id,
+                title: movieDetails.title,
+                poster_path: movieDetails.poster_path,
+                genres: movieDetails.genres.map((genre: any) => genre.name),
+                genre_ids: movieDetails.genres.map((genre: any) => genre.id),
+              };
+            } else {
+              console.error(`Détails du film manquants pour l'ID ${movieId}`);
+              return null;
+            }
+          } catch (error) {
+            console.error(
+              "Erreur lors de la récupération des détails du film:",
+              error
+            );
+            return null;
+          }
+        })
+      );
+
+      const validLikedMovies = fetchedLikedMovies.filter(
+        (liked) => liked !== null
+      );
+
+      console.log(
+        validLikedMovies,
+        "Films likés après récupération des détails"
+      );
+      return validLikedMovies;
+    } else {
+      console.log("Document utilisateur non trouvé");
+      return [];
+    }
+  } else {
+    console.log("Utilisateur non connecté");
+    return [];
+  }
+};
+
+const removeLike = async (uid: string, movie: { id: number }) => {
+  const userRef = doc(db, "users", uid);
+  const userDoc = await getDoc(userRef);
+
+  if (userDoc.exists()) {
+    const likes = userDoc.data().likes || [];
+
+    const movieToRemove = likes.find(
+      (likedMovie) => likedMovie.id === movie.id
+    );
+
+    if (movieToRemove) {
+      await updateDoc(userRef, {
+        likes: arrayRemove(movieToRemove),
+      });
+
+      console.log(`Film ${movie.id} retiré des likes`);
+    } else {
+      console.log("Film introuvable dans les likes");
+    }
+  } else {
+    console.log("Utilisateur non connecté");
+  }
+};
+
+export {
+  getFavorites,
+  addFavorite,
+  removeFavorite,
+  getLikedMovies,
+  removeLike,
+};

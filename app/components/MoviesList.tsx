@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { getFavorites } from "../lib/firestore";
+import { getFavorites, getLikedMovies } from "../lib/firestore";
 import { fetchRecommendedMovies, fetchMovies } from "../lib/tmdb";
 import { Movie } from "../type/types";
 import { useAuth } from "../lib/authContext";
@@ -22,11 +22,13 @@ const MoviesList = () => {
       const fetchFavoritesAndRecommendations = async () => {
         setLoading(true);
         const fetchedFavorites = await getFavorites(user.uid);
+        const fetchedLikes = await getLikedMovies(user.uid);
         setFavorites(fetchedFavorites);
 
         if (fetchedFavorites.length > 0) {
           const recommendations = await fetchRecommendedMovies(
-            fetchedFavorites
+            fetchedFavorites,
+            fetchedLikes
           );
           setRecommendedMovies(recommendations);
         } else {
